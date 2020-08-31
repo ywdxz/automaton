@@ -1,38 +1,66 @@
 package automaton
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestCheck1(t *testing.T) {
 
 	var tests = []struct {
-		src  []string
-		dest []byte
+		src      []string
+		dest     []byte
+		expected []CheckResult
 	}{
 		{
 			[]string{"12321", "abc", "ffdsfs"},
 			[]byte("11abc22ffdsfs"),
+			[]CheckResult{{2, 5, 1}, {7, 13, 2}},
 		},
 		{
 			[]string{"ab", "abc", "abcd"},
 			[]byte("abcd"),
+			[]CheckResult{{0, 2, 0}, {0, 3, 1}, {0, 4, 2}},
+		},
+		{
+			[]string{"abcd", "abc", "ab"},
+			[]byte("abcd"),
+			[]CheckResult{{0, 2, 2}, {0, 3, 1}, {0, 4, 0}},
+		},
+		{ //bug?
+			[]string{"cd", "bcd", "abcd"},
+			[]byte("abcd"),
+			[]CheckResult{{0, 4, 2}},
+		},
+		{ //bug?
+			[]string{"abcd", "bcd", "cd"},
+			[]byte("abcd"),
+			[]CheckResult{{0, 4, 0}},
 		},
 		{
 			[]string{"ab", "abc", "abcd"},
 			[]byte("acbcd"),
+			nil,
 		},
 	}
 
 	for _, test := range tests {
 		auto := NewAutomaton(test.src)
-		// auto.Print()
 		results := auto.Check(test.dest)
 
-		fmt.Println("-----")
-		for _, result := range results {
-			fmt.Printf("%d-(%d:%d) - %s \n", result.TokenID, result.StartIndex, result.EndIndex, test.dest[result.StartIndex:result.EndIndex])
+		if len(results) != len(test.expected) {
+			t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+		}
+
+		for i := 0; i < len(results); i++ {
+			if results[i].TokenID != test.expected[i].TokenID {
+				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+			}
+			if results[i].StartIndex != test.expected[i].StartIndex {
+				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+			}
+			if results[i].EndIndex != test.expected[i].EndIndex {
+				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+			}
 		}
 	}
 }

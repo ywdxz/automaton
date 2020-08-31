@@ -2,7 +2,7 @@ package automaton
 
 import (
 	"container/list"
-	"fmt"
+	// "fmt"
 )
 
 type CheckResult struct {
@@ -13,7 +13,7 @@ type CheckResult struct {
 
 type Automaton interface {
 	Check(src []byte) (result []CheckResult)
-	Print()
+	// Print()
 }
 
 func NewAutomaton(worlds []string) Automaton {
@@ -136,18 +136,18 @@ func (e *engine) check(src []byte) (result []CheckResult) {
 	return
 }
 
-func (e *engine) Print() {
+// func (e *engine) Print() {
 
-	ll := list.New()
-	ll.PushFront(e.rootNode)
+// 	ll := list.New()
+// 	ll.PushFront(e.rootNode)
 
-	for ll.Len() > 0 {
-		curNode := ll.Remove(ll.Back()).(*node)
-		fmt.Printf("[%d],%d,%+v,%d\n", curNode.id, curNode.tokenID, curNode.nextNodeMap, len(curNode.nextNodeMap))
-		for c, v := range curNode.nextNodeMap {
-			ll.PushFront(v)
-			fmt.Printf("{%c}\n", c)
-		}
-	}
+// 	for ll.Len() > 0 {
+// 		curNode := ll.Remove(ll.Back()).(*node)
+// 		fmt.Printf("[%d],%d,%+v,%d\n", curNode.id, curNode.tokenID, curNode.nextNodeMap, len(curNode.nextNodeMap))
+// 		for c, v := range curNode.nextNodeMap {
+// 			ll.PushFront(v)
+// 			fmt.Printf("{%c}\n", c)
+// 		}
+// 	}
 
-}
+// }
