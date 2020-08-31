@@ -2,6 +2,8 @@ package automaton
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCheck1(t *testing.T) {
@@ -34,7 +36,7 @@ func TestCheck1(t *testing.T) {
 		{ //bug?
 			[]string{"abcd", "bcd", "cd"},
 			[]byte("abcd"),
-			[]CheckResult{{0, 4, 0}},
+			[]CheckResult{{1, 4, 0}},
 		},
 		{
 			[]string{"ab", "abc", "abcd"},
@@ -47,20 +49,15 @@ func TestCheck1(t *testing.T) {
 		auto := NewAutomaton(test.src)
 		results := auto.Check(test.dest)
 
-		if len(results) != len(test.expected) {
-			t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+		if !assert.Equal(t, len(results), len(test.expected)) {
+			t.Fatalf("in line with expectations,{%+v}\n", test)
 		}
 
 		for i := 0; i < len(results); i++ {
-			if results[i].TokenID != test.expected[i].TokenID {
-				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
+			if !assert.Equal(t, results[i], test.expected[i]) {
+				t.Fatalf("in line with expectations,{%+v}\n", test)
 			}
-			if results[i].StartIndex != test.expected[i].StartIndex {
-				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
-			}
-			if results[i].EndIndex != test.expected[i].EndIndex {
-				t.Fatalf("{%+v}\n,in line with expectations: \nout - [%+v]\n expect - [%+v]", test, results, test.expected)
-			}
+
 		}
 	}
 }
